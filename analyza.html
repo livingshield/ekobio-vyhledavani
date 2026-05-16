@@ -1,0 +1,797 @@
+
+    <!DOCTYPE html>
+    <html lang="cs">
+    <head>
+        <meta charset="UTF-8">
+        <title>Sémantický index dokumentů</title>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+        <style>
+            @page {
+                size: A4;
+                margin: 20mm;
+                @bottom-center {
+                    content: counter(page);
+                }
+            }
+            body {
+                font-family: 'Inter', sans-serif;
+                line-height: 1.6;
+                color: #2D3748;
+                max-width: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            h1 {
+                color: #1A202C;
+                font-size: 28px;
+                border-bottom: 2px solid #E2E8F0;
+                padding-bottom: 10px;
+                margin-top: 40px;
+            }
+            h1:first-child {
+                margin-top: 0;
+                font-size: 36px;
+                color: #2B6CB0;
+                text-align: center;
+                border-bottom: none;
+                margin-bottom: 50px;
+            }
+            h2 {
+                color: #2B6CB0;
+                font-size: 22px;
+                margin-top: 30px;
+                border-bottom: 1px solid #E2E8F0;
+                padding-bottom: 5px;
+            }
+            h3 {
+                color: #4A5568;
+                font-size: 18px;
+                margin-top: 25px;
+            }
+            p, li {
+                font-size: 14px;
+            }
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin: 20px 0;
+                font-size: 13px;
+            }
+            th, td {
+                border: 1px solid #CBD5E0;
+                padding: 10px;
+                text-align: left;
+            }
+            th {
+                background-color: #EDF2F7;
+                color: #2D3748;
+                font-weight: 600;
+            }
+            tr:nth-child(even) {
+                background-color: #F7FAFC;
+            }
+            code {
+                background-color: #EDF2F7;
+                padding: 2px 4px;
+                border-radius: 4px;
+                font-family: 'Courier New', Courier, monospace;
+                font-size: 13px;
+                color: #E53E3E;
+            }
+            pre code {
+                display: block;
+                padding: 15px;
+                background-color: #1A202C;
+                color: #A0AEC0;
+                border-radius: 8px;
+                overflow-x: auto;
+            }
+            .alert {
+                padding: 15px;
+                border-left: 5px solid;
+                margin: 20px 0;
+                border-radius: 0 4px 4px 0;
+                font-size: 14px;
+            }
+            .alert-note {
+                background-color: #EBF8FF;
+                border-left-color: #3182CE;
+                color: #2B6CB0;
+            }
+            .alert-warning {
+                background-color: #FFFFF0;
+                border-left-color: #D69E2E;
+                color: #B7791F;
+            }
+            .mermaid-placeholder {
+                padding: 20px;
+                background-color: #EDF2F7;
+                border: 1px dashed #CBD5E0;
+                text-align: center;
+                margin: 20px 0;
+                border-radius: 8px;
+            }
+            hr {
+                border: 0;
+                height: 1px;
+                background: #E2E8F0;
+                margin: 30px 0;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Analýza a plán realizace: Sémantický index dokumentů</h1>
+<h2>1. Přepis zadání z fotografií</h2>
+<div class="alert alert-note"><strong>Poznámka:</strong><br/>
+> Text byl extrahován z 3 JPEG fotografií tištěné technické specifikace. Některé části na okrajích/přeloženém papíru byly částečně nečitelné – tyto jsou označeny `[?]`.</div>
+
+<hr />
+<h3>Úvod</h3>
+<p>Cílem veřejné zakázky je <strong>návrh, implementace a dodání systému pro tvorbu a provoz sémantického indexu dokumentů</strong>, který umožní efektivní vyhledávání informací na základě významové (vektorové) podobnosti.</p>
+<p>Navrhované řešení musí umožnit:<br />
+- zpracování nestrukturovaných dokumentů (zejména ve formátu PDF)<br />
+- jejich transformaci do strukturované podoby<br />
+- vytvoření vektorových reprezentací (embeddingů)<br />
+- uložení do indexu umožňujícího rychlé a přesné vyhledávání</p>
+<p><strong>Důraz je kladen zejména na:</strong><br />
+- technologickou nezávislost a eliminaci vendor lock-in<br />
+- využití otevřených standardů a open-source technologií<br />
+- možnost provozu v prostředí zadavatele bez závislosti na externích službách<br />
+- modularitu a rozšiřitelnost řešení<br />
+- transparentnost, auditovatelnost a dlouhodobou udržitelnost</p>
+<p>Systém bude sloužit jako <strong>obecná platforma pro sémantické vyhledávání</strong> nad dokumenty a musí být navržen tak, aby umožňoval budoucí rozšiřování o další typy vstupních dat, embeddingových modelů a způsobů zpracování.</p>
+<p>Dodavatel je povinen navrhnout řešení v souladu s touto technickou specifikací a dodat plně funkční systém včetně zdrojových kódů, dokumentace a podpory jeho nasazení a provozu v infrastruktuře zadavatele.</p>
+<hr />
+<h3>Obecné podmínky</h3>
+<p>Řešení:<br />
+- není závislé na licenční politice dodavatelů jednotlivých subkomponent<br />
+- je realizováno výhradně s využitím open-source technologií licencovaných pod permisivní licencí (např. MIT, Apache 2.0, BSD) nebo jinou licencí umožňující komerční využití bez povinnosti otevření odvozeného díla<br />
+- nevyužívá proprietární rozšíření nebo uložené procedury vázané na konkrétního dodavatele AI služeb<br />
+- je modulární a umožňuje oddělení jednotlivých komponent (chunkování, embedding, indexace)</p>
+<hr />
+<h3>§1. Datové úložiště a perzistence</h3>
+<ul>
+<li>Uložené entity používají jako primární klíč <strong>UUID (preferovaně UUIDv7)</strong></li>
+<li>Primární datové úložiště:</li>
+<li>je realizováno pomocí <strong>PostgreSQL</strong></li>
+<li>využívá rozšíření <strong><code>pgvector</code></strong> přímo pro ukládání a vyhledávání embeddingů</li>
+<li>podporuje ukládání vektorových dat a podobnostní vyhledávání</li>
+<li>umožňuje plnou přenositelnost dat (dokumenty, chunky, embeddingy, metadata, tagy, indexy) mezi instancemi databáze bez ztráty informace</li>
+</ul>
+<hr />
+<h3>§2. Zpracování dokumentů</h3>
+<p>Výsledné řešení:<br />
+- je distribuováno (např. jako docker kontejnery)<br />
+- je konfigurovatelné<br />
+- nevyžaduje trvalé připojení pro lokální provoz služby<br />
+- podporuje horizontální škálování jednotlivých komponent</p>
+<hr />
+<h3>§3. Embeddingovací služby</h3>
+<p>Embeddingové služby jsou plně konfigurovatelné za běhu služby a splňují následující požadavky:<br />
+- systém podporuje integraci s více embeddingovými modely současně<br />
+- podporuje výměnu embeddingových modelů bez nutnosti úpravy zdrojového kódu<br />
+- možnost využití jiných kompatibilních embeddingovacích služeb<br />
+- konfigurace embeddingovací služby zahrnuje minimálně:<br />
+  - identifikaci API endpointu a modelu<br />
+  - dimenzi embeddingů (např. 1536 pro OpenAI text-embedding-3-small, 768 pro open-source)<br />
+- systém umožňuje využití více embeddingovacích služeb<br />
+- jedna embeddingovací služba může být využita více indexy současně<br />
+- změna nebo přidání embeddingovací služby nevyžaduje rekompilaci aplikace<br />
+- systém uchovává původní dokument po celou dobu jeho životního cyklu<br />
+- umožňuje plnou reindexaci dokumentů při změně nebo přidání nového embedding modelu</p>
+<hr />
+<h3>§4. Chunkovací služby</h3>
+<p>Chunkovací služby jsou plně konfigurovatelné.</p>
+<p>Součástí dodávky je minimálně implementace služby pro zpracování PDF dokumentů, realizovaná jako kontejner, která:<br />
+- provádí extrakci souvislého textu<br />
+- provádí extrakci tabulek a jejich uložení ve strukturovaném formátu (např. Markdown, HTML)<br />
+- umožňuje konfiguraci překryvu (overlap) a maximální délky chunku<br />
+- podporuje chunkování podle stránek, odstavců atd.<br />
+- vrací textovou nebo strukturovanou reprezentaci nalezeného chunku včetně metadat:<br />
+  - identifikátor zdrojového dokumentu<br />
+  - pozici v dokumentu (např. číslo stránky nebo rozsah)<br />
+  - typ chunku (text / tabulka)</p>
+<hr />
+<h3>§5. Dokumenty, tagy a metadata</h3>
+<p><strong>Indexovatelné dokumenty:</strong><br />
+- jsou označitelné pomocí tagů (key–value)<br />
+- sada tagů je globální v rámci celé služby<br />
+- každý dokument může mít přiřazeno 0 až N tagů<br />
+- změna tagů dokumentu nevyžaduje reindexaci embeddingů<br />
+- změna tagů se projeví okamžitě ve vyhledávání</p>
+<p><strong>Systém:</strong><br />
+- podporuje verzování dokumentů<br />
+- umožňuje evidenci více verzí jednoho dokumentu<br />
+- umožňuje indexaci konkrétní verze dokumentu</p>
+<hr />
+<h3>§6. Indexy</h3>
+<p>Systém podporuje více indexů nad dokumenty.</p>
+<p><strong>Index:</strong><br />
+- reprezentuje konkrétní množinu embeddingů nad chunkovanými dokumenty<br />
+- je jednoznačně identifikován<br />
+- je svázán právě s jednou embeddingovou službou<br />
+- umožňuje indexaci jednoho dokumentu do více indexů současně<br />
+- může být vytvořen, upraven nebo odstraněn za běhu služby<br />
+- změna konfigurace jednoho indexu neovlivňuje ostatní indexy</p>
+<p><strong>Systém:</strong><br />
+- umožňuje odstranění indexu včetně všech jeho embeddingů<br />
+- zajišťuje konzistenci dat při mazání dokumentů nebo indexů</p>
+<hr />
+<h3>§7. Asynchronní zpracování</h3>
+<p><strong>Indexace dokumentů:</strong><br />
+- probíhá asynchronně<br />
+- umožňuje sledování stavu zpracování (např. čeká / zpracovává se / dokončeno / chyba)<br />
+- podporuje paralelní zpracování více dokumentů<br />
+- umožňuje opakování zpracování v případě chyby</p>
+<hr />
+<h3>§8. API rozhraní</h3>
+<p>Služby jsou realizovány prostřednictvím REST API a poskytují OpenAPI specifikaci.<br />
+API:<br />
+- je verzováno (např. <code>/api/v1/...</code>)<br />
+- používá standardizovaný formát chybových odpovědí<br />
+- podporuje idempotentní operace tam, kde je to relevantní</p>
+<p><strong>8.1 Vložení dokumentu do indexu</strong><br />
+Endpoint umožňuje:<br />
+- nahrání dokumentu ve formátu PDF<br />
+- vložení tagů dokumentu<br />
+- určení seznamu indexů, do kterých bude dokument zaindexován<br />
+Zpracování probíhá asynchronně. Odpověď obsahuje minimálně identifikátor dokumentu a identifikátor úlohy zpracování.</p>
+<p><strong>8.2 Přehledová rozhraní</strong><br />
+Systém poskytuje endpointy pro listování/zobrazení evidovaných dokumentů.</p>
+<p><strong>8.3 Sémantické vyhledávání</strong><br />
+Vstupní parametry vyhledávání:<br />
+- hledaná fráze<br />
+- filtry nad tagy (podpora logických operátorů AND / OR / NOT)<br />
+- seznam indexů, které budou prohledávány<br />
+- požadovaný počet výsledků (k) a dolní hranice podobnosti</p>
+<p>Odpověď obsahuje identifikátor dokumentu a textovou nebo strukturovanou reprezentaci nalezeného chunku.</p>
+<hr />
+<h3>§9. Výkonnostní požadavky</h3>
+<p><strong>Systém:</strong><br />
+- podporuje paralelní zpracování dotazů<br />
+- umožňuje horizontální škálování<br />
+- je schopen obsloužit více souběžných požadavků</p>
+<p><strong>Požadavky:</strong><br />
+- maximální odezva vyhledávání je definovatelná (např. do 2 sekund pro standardní dotaz)<br />
+- systém umožňuje dávkové (batch) zpracování embeddingů</p>
+<hr />
+<h3>§10. Monitoring a audit</h3>
+<p><strong>Systém poskytuje:</strong><br />
+- health check endpoint<br />
+- metriky pro monitoring (např. Prometheus kompatibilní)<br />
+- logování operací (indexace, vyhledávání, chyby)</p>
+<p><strong>Systém:</strong><br />
+- umožňuje audit operací (kdo a kdy provedl akci)</p>
+<hr />
+<h3>§11. Autentizace a zabezpečení</h3>
+<p><strong>Autentizace služby:</strong><br />
+- je realizována pomocí <strong>Microsoft Entra ID</strong><br />
+- je postavena na standardech <strong>OAuth 2.0 / OpenID Connect</strong><br />
+- umožňuje budoucí rozšíření o autorizační model založený na rolích nebo scopech</p>
+<p><strong>Systém:</strong><br />
+- podporuje šifrování dat při přenosu (TLS)<br />
+- umožňuje implementaci izolace dat (např. multi-tenant režim)</p>
+<hr />
+<h3>§12. Implementace</h3>
+<p><strong>Implementace řešení:</strong><br />
+- je realizována v jednom z jazyků: <strong>C#</strong>, <strong>Python</strong> nebo <strong>JavaScript</strong><br />
+- nevyužívá proprietární runtime závislé na konkrétním cloudu<br />
+- je plně provozovatelná v infrastruktuře zadavatele</p>
+<hr />
+<h3>§13. Akceptační kritéria</h3>
+<p>Zadavatel ověří zejména:<br />
+- možnost indexace jednoho dokumentu do více indexů s různými embeddingovými modely<br />
+- možnost změny embeddingovací služby bez změny aplikačního kódu<br />
+- možnost plné reindexace dokumentů<br />
+- funkčnost filtrování výsledků pomocí tagů<br />
+- podporu hybridního vyhledávání<br />
+- možnost provozu řešení v prostředí bez přímého přístupu k internetu<br />
+- správnou funkci asynchronního zpracování</p>
+<hr />
+<h3>§14. Provoz a údržba</h3>
+<p>Systém:<br />
+- umožňuje zálohování a obnovu dat<br />
+- podporuje disaster recovery scénáře<br />
+- obsahuje dokumentaci pro nasazení a provoz</p>
+<hr />
+<h3>§15. Dokumentace</h3>
+<p>Součástí dodávky je:<br />
+- architektonická dokumentace<br />
+- dokumentace API (OpenAPI)<br />
+- dokumentace nasazení<br />
+- základní provozní dokumentace</p>
+<hr />
+<h3>§16. Licenční a autorská práva</h3>
+<p>Zadavatel má právo používat dílo bez omezení a upravovat je pro vlastní potřeby. Součástí je i předání kompletních zdrojových kódů.</p>
+<hr />
+<h2>2. Klíčové požadavky – souhrn</h2>
+<table>
+<thead>
+<tr>
+<th>Oblast</th>
+<th>Požadavek</th>
+<th>Priorita</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Databáze</strong></td>
+<td>PostgreSQL + pgvector, UUID v7 klíče</td>
+<td>Kritická</td>
+</tr>
+<tr>
+<td><strong>Dokumenty</strong></td>
+<td>PDF vstup, chunkování (text/tabulka), verzování</td>
+<td>Kritická</td>
+</tr>
+<tr>
+<td><strong>Embeddingy</strong></td>
+<td>Open-source modely, modulární výměna</td>
+<td>Kritická</td>
+</tr>
+<tr>
+<td><strong>Indexy</strong></td>
+<td>Více indexů, CRUD za běhu, vazba na embedding službu</td>
+<td>Kritická</td>
+</tr>
+<tr>
+<td><strong>Vyhledávání</strong></td>
+<td>Sémantické (vektorové), &lt; 2s odezva</td>
+<td>Kritická</td>
+</tr>
+<tr>
+<td><strong>Tagy</strong></td>
+<td>Key-value, globální sada, okamžité filtrování</td>
+<td>Vysoká</td>
+</tr>
+<tr>
+<td><strong>Asynchronní zpracování</strong></td>
+<td>Fronta, stavy, retry, paralelismus</td>
+<td>Vysoká</td>
+</tr>
+<tr>
+<td><strong>API</strong></td>
+<td>REST/gRPC, strukturované odpovědi</td>
+<td>Kritická</td>
+</tr>
+<tr>
+<td><strong>Autentizace</strong></td>
+<td>Microsoft Entra ID, OAuth 2.0 / OIDC</td>
+<td>Vysoká</td>
+</tr>
+<tr>
+<td><strong>Monitoring</strong></td>
+<td>Health check, Prometheus metriky, audit log</td>
+<td>Střední</td>
+</tr>
+<tr>
+<td><strong>Škálovatelnost</strong></td>
+<td>Horizontální škálování, souběžnost</td>
+<td>Střední</td>
+</tr>
+<tr>
+<td><strong>Licence</strong></td>
+<td>Výhradně open-source (MIT/Apache/BSD)</td>
+<td>Kritická</td>
+</tr>
+<tr>
+<td><strong>Nasazení</strong></td>
+<td>On-premise v infra zadavatele, kontejnerizace</td>
+<td>Vysoká</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>3. Architektonický návrh</h2>
+<div class="mermaid-placeholder"><i>[Mermaid diagram - viz zdrojový kód]</i></div>
+
+<hr />
+<h2>4. Volba technologického stacku</h2>
+<table>
+<thead>
+<tr>
+<th>Komponenta</th>
+<th>Technologie</th>
+<th>Licence</th>
+<th>Odůvodnění</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Jazyk</strong></td>
+<td>Python 3.12+</td>
+<td>PSF</td>
+<td>Nejlepší ekosystém pro NLP/ML, specifikace povoluje</td>
+</tr>
+<tr>
+<td><strong>Web framework</strong></td>
+<td>FastAPI</td>
+<td>MIT</td>
+<td>Async, OpenAPI docs, vysoký výkon</td>
+</tr>
+<tr>
+<td><strong>Databáze</strong></td>
+<td>PostgreSQL 16</td>
+<td>PostgreSQL License</td>
+<td>Požadavek specifikace</td>
+</tr>
+<tr>
+<td><strong>Vektorové rozšíření</strong></td>
+<td>pgvector</td>
+<td>PostgreSQL License</td>
+<td>Požadavek specifikace</td>
+</tr>
+<tr>
+<td><strong>ORM</strong></td>
+<td>SQLAlchemy 2.0 + asyncpg</td>
+<td>MIT</td>
+<td>Async podpora, pgvector integrace</td>
+</tr>
+<tr>
+<td><strong>Task queue</strong></td>
+<td>Celery + Redis</td>
+<td>BSD</td>
+<td>Asynchronní zpracování, retry, paralelismus</td>
+</tr>
+<tr>
+<td><strong>PDF zpracování</strong></td>
+<td>PyMuPDF (fitz)</td>
+<td>AGPL→ <strong>alternativa: pdfplumber (MIT)</strong></td>
+<td>Extrakce textu i tabulek</td>
+</tr>
+<tr>
+<td><strong>Chunkování</strong></td>
+<td>LangChain text splitters nebo vlastní</td>
+<td>MIT</td>
+<td>Modulární, konfigurovatelné</td>
+</tr>
+<tr>
+<td><strong>Embedding modely</strong></td>
+<td>sentence-transformers (lokální)</td>
+<td>Apache 2.0</td>
+<td>Bez vendor lock-in, on-premise</td>
+</tr>
+<tr>
+<td><strong>Autentizace</strong></td>
+<td>msal (Microsoft) + python-jose</td>
+<td>MIT</td>
+<td>Entra ID / OAuth 2.0</td>
+</tr>
+<tr>
+<td><strong>Monitoring</strong></td>
+<td>prometheus-client</td>
+<td>Apache 2.0</td>
+<td>Prometheus kompatibilní metriky</td>
+</tr>
+<tr>
+<td><strong>Kontejnerizace</strong></td>
+<td>Docker + docker-compose</td>
+<td>Apache 2.0</td>
+<td>On-premise nasazení</td>
+</tr>
+<tr>
+<td><strong>Migrace DB</strong></td>
+<td>Alembic</td>
+<td>MIT</td>
+<td>Verzování DB schématu</td>
+</tr>
+</tbody>
+</table>
+<div class="alert alert-warning"><strong>Upozornění:</strong><br/>
+> **PyMuPDF** má AGPL licenci – je nutné použít alternativu (pdfplumber, pypdf) nebo ověřit kompatibilitu s požadavky na licencování. Specifikace vyžaduje výhradně permisivní licence.</div>
+
+<hr />
+<h2>5. Datový model (PostgreSQL)</h2>
+<div class="mermaid-placeholder"><i>[Mermaid diagram - viz zdrojový kód]</i></div>
+
+<hr />
+<h2>6. Fázovaný implementační plán</h2>
+<h3>Fáze 1: Základ (~ 2 týdny)</h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Úkol</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1.1</td>
+<td>Inicializace projektu</td>
+<td>Python projekt, pyproject.toml, struktura adresářů</td>
+</tr>
+<tr>
+<td>1.2</td>
+<td>Docker Compose</td>
+<td>PostgreSQL + pgvector + Redis kontejnery</td>
+</tr>
+<tr>
+<td>1.3</td>
+<td>DB schéma + migrace</td>
+<td>Alembic migrace, všechny tabulky dle datového modelu</td>
+</tr>
+<tr>
+<td>1.4</td>
+<td>Základní REST API</td>
+<td>FastAPI skeleton, health check endpoint</td>
+</tr>
+<tr>
+<td>1.5</td>
+<td>Autentizace</td>
+<td>Entra ID middleware (OAuth 2.0 / OIDC)</td>
+</tr>
+</tbody>
+</table>
+<h3>Fáze 2: Správa dokumentů (~ 2 týdny)</h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Úkol</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2.1</td>
+<td>Upload dokumentů</td>
+<td>Nahrání PDF, uložení, vytvoření záznamu</td>
+</tr>
+<tr>
+<td>2.2</td>
+<td>Verzování</td>
+<td>Správa verzí dokumentů</td>
+</tr>
+<tr>
+<td>2.3</td>
+<td>Tag management</td>
+<td>CRUD tagy, přiřazování k dokumentům</td>
+</tr>
+<tr>
+<td>2.4</td>
+<td>Document CRUD</td>
+<td>Listování, detail, mazání s kaskádou</td>
+</tr>
+</tbody>
+</table>
+<h3>Fáze 3: Zpracování pipeline (~ 3 týdny)</h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Úkol</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>3.1</td>
+<td>PDF parser</td>
+<td>Extrakce textu a tabulek z PDF</td>
+</tr>
+<tr>
+<td>3.2</td>
+<td>Chunking engine</td>
+<td>Modulární chunkování, konfigurovatelné strategie</td>
+</tr>
+<tr>
+<td>3.3</td>
+<td>Embedding service</td>
+<td>Abstrakce nad embedding modely, lokální inference</td>
+</tr>
+<tr>
+<td>3.4</td>
+<td>Asynchronní pipeline</td>
+<td>Celery workers, task queue, sledování stavů</td>
+</tr>
+<tr>
+<td>3.5</td>
+<td>Retry mechanismus</td>
+<td>Opakování při chybě, dead-letter queue</td>
+</tr>
+</tbody>
+</table>
+<h3>Fáze 4: Indexace a vyhledávání (~ 2 týdny)</h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Úkol</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>4.1</td>
+<td>Index management</td>
+<td>CRUD indexů, vazba na embedding službu</td>
+</tr>
+<tr>
+<td>4.2</td>
+<td>Vektorové vyhledávání</td>
+<td>pgvector podobnostní dotazy, filtrování dle tagů</td>
+</tr>
+<tr>
+<td>4.3</td>
+<td>Výkonnostní optimalizace</td>
+<td>IVFFlat/HNSW indexy, query tuning, &lt; 2s odezva</td>
+</tr>
+<tr>
+<td>4.4</td>
+<td>Batch zpracování</td>
+<td>Dávkové generování embeddingů</td>
+</tr>
+</tbody>
+</table>
+<h3>Fáze 5: Observabilita a zabezpečení (~ 1 týden)</h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Úkol</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>5.1</td>
+<td>Prometheus metriky</td>
+<td>Instrumentace klíčových operací</td>
+</tr>
+<tr>
+<td>5.2</td>
+<td>Audit log</td>
+<td>Logování všech operací s identitou uživatele</td>
+</tr>
+<tr>
+<td>5.3</td>
+<td>TLS konfigurace</td>
+<td>Šifrování přenosu</td>
+</tr>
+<tr>
+<td>5.4</td>
+<td>Multi-tenant izolace</td>
+<td>Příprava na oddělení dat</td>
+</tr>
+</tbody>
+</table>
+<h3>Fáze 6: Finalizace (~ 1 týden)</h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Úkol</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>6.1</td>
+<td>Integrační testy</td>
+<td>End-to-end testy celého pipeline</td>
+</tr>
+<tr>
+<td>6.2</td>
+<td>Dokumentace</td>
+<td>API docs (OpenAPI), deployment guide, uživatelská příručka</td>
+</tr>
+<tr>
+<td>6.3</td>
+<td>Přenositelnost dat</td>
+<td>Export/import dat mezi instancemi</td>
+</tr>
+<tr>
+<td>6.4</td>
+<td>Deployment balíček</td>
+<td>Docker images, Helm chart / compose pro produkci</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>7. Struktura projektu</h2>
+<pre><code>semantic-index/
+├── docker-compose.yml
+├── Dockerfile
+├── pyproject.toml
+├── alembic/
+│   ├── alembic.ini
+│   └── versions/
+├── src/
+│   ├── main.py                  # FastAPI entrypoint
+│   ├── config.py                # Konfigurace (env vars)
+│   ├── auth/
+│   │   ├── entra_id.py          # Microsoft Entra ID integration
+│   │   └── middleware.py        # OAuth 2.0 middleware
+│   ├── api/
+│   │   ├── documents.py         # Document endpoints
+│   │   ├── tags.py              # Tag endpoints
+│   │   ├── indexes.py           # Index endpoints
+│   │   ├── search.py            # Search endpoints
+│   │   └── tasks.py             # Task status endpoints
+│   ├── models/
+│   │   ├── document.py
+│   │   ├── chunk.py
+│   │   ├── embedding.py
+│   │   ├── index.py
+│   │   ├── tag.py
+│   │   └── audit.py
+│   ├── services/
+│   │   ├── document_service.py
+│   │   ├── chunking/
+│   │   │   ├── base.py          # Abstract chunker
+│   │   │   ├── text_chunker.py
+│   │   │   └── table_chunker.py
+│   │   ├── embedding/
+│   │   │   ├── base.py          # Abstract embedding provider
+│   │   │   └── sentence_transformer.py
+│   │   ├── index_service.py
+│   │   ├── search_service.py
+│   │   └── tag_service.py
+│   ├── workers/
+│   │   ├── celery_app.py
+│   │   └── indexation_worker.py
+│   └── monitoring/
+│       ├── health.py
+│       ├── metrics.py
+│       └── audit.py
+├── tests/
+│   ├── unit/
+│   └── integration/
+└── docs/
+    ├── api.md
+    ├── deployment.md
+    └── architecture.md
+</code></pre>
+<hr />
+<h2>8. Rizika a otevřené otázky</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Riziko / Otázka</th>
+<th>Dopad</th>
+<th>Mitigace</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>Podpora hybridního vyhledávání</strong> (§13)</td>
+<td>Kromě pgvector vektorového hledání se očekává i textové hledání (BM25 apod.)</td>
+<td>Nasadit PostgreSQL Full-Text Search nebo dedikované řešení</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>Volba embedding modelu</strong></td>
+<td>Výkon vyhledávání závisí na kvalitě modelu, požadavek např. na dimenzi 1536/768</td>
+<td>Možnost integrace s OpenAI, i přes požadavek na lokální běh? Možnost použít Multilingual E5 pro lokální běh</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>Velikost embeddingů vs. výkon pgvector</strong></td>
+<td>U velkých datasetů může být pgvector pomalý</td>
+<td>HNSW indexy, případně partition tabulek</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>PDF s OCR / skenované dokumenty</strong></td>
+<td>Nespecifikováno, zda vstupem mohou být i skenované PDF</td>
+<td>Připravit OCR modul jako volitelný</td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong>Licenční audit</strong></td>
+<td>Nutná důkladná kontrola všech závislostí (viz např. PyMuPDF)</td>
+<td>Automatický license-check v CI/CD</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>9. Odhadovaný harmonogram</h2>
+<div class="mermaid-placeholder"><i>[Mermaid diagram - viz zdrojový kód]</i></div>
+
+<p><strong>Celkový odhad: ~11 týdnů</strong> (při jednom vývojáři na plný úvazek)</p>
+    </body>
+    </html>
+    

@@ -1,11 +1,16 @@
+import os
+import time
 from celery import Celery
-from src.config import settings
+from src.database import SessionLocal
+from src.models import Document, DocumentChunk
+from src.services.pdf_parser import extract_text_from_pdf
+from src.services.chunker import chunk_text
+from src.services.embedder import generate_embeddings
 
-# Initialize Celery app
 celery_app = Celery(
     "semantic_worker",
-    broker=settings.REDIS_URL,
-    backend=settings.REDIS_URL
+    broker=os.environ.get("CELERY_BROKER_URL", "redis://localhost:6379/0"),
+    backend=os.environ.get("CELERY_RESULT_BACKEND", "redis://localhost:6379/0")
 )
 
 celery_app.conf.update(
