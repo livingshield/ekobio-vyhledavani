@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "semantic-index"
+version = "0.1.0"
+description = "Semantic Document Index with FastAPI, PostgreSQL, pgvector, and Celery"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi>=0.111.0",
+    "uvicorn[standard]>=0.29.0",
+    "sqlalchemy>=2.0.30",
+    "psycopg2-binary>=2.9.9",
+    "pgvector>=0.2.5",
+    "alembic>=1.13.1",
+    "celery>=5.4.0",
+    "redis>=5.0.4",
+    "python-jose[cryptography]>=3.3.0",
+    "pydantic-settings>=2.2.1",
+    "sentence-transformers>=2.7.0",
+    "python-multipart>=0.0.9",
+    "uuid6>=2024.1.1"
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "black",
+    "isort"
+]
