@@ -34,16 +34,17 @@ Systém nevyužívá proprietární SaaS služby.
 
 ## 4. Vývoj, Integrace a Bezpečnost (Služby - CAPEX)
 Náklady na lidské zdroje (Man-Days - MD) nutné k naprogramování, integraci s vojenskými systémy a certifikaci.
+**Díky zapojení pokročilého agentního AI asistenta (Antigravity od Google DeepMind) pro autonomní generování a testování kódu dochází k enormnímu snížení původně plánované časové dotace o 70-80 %!**
 
-| Položka | Odhad náročnosti (MD) | Odhadovaná cena (CZK bez DPH) |
-| :--- | :--- | :--- |
-| **Vývoj Backend architektury** | Datové modelování, FastAPI, Celery workery, integrace pgvector (cca 40 MD). | 600 000 Kč |
-| **AI integrace a ladění** | Zprovoznění lokálních embeddingů, nastavení chunkingu, RRF (Hybrid Search) evaluace (cca 25 MD). | 450 000 Kč |
-| **Front-end / Integrace na UI** | Napojení do existujících portálů AČR nebo vývoj klientské aplikace (cca 30 MD). | 450 000 Kč |
-| **Integrace na Entra ID (OIDC)** | Napojení a konfigurace rolí, SSO (cca 10 MD). | 150 000 Kč |
-| **Bezpečnostní Audit (NÚKIB)** | Nezávislý penetrační test a audit architektury pro schválení provozu ve vnitřní síti. | 350 000 Kč |
-| **Instalace a Deployment** | Fyzické nasazení na servery AČR, kontejnerizace (Docker/Kubernetes). | 150 000 Kč |
-| **Celkem Implementace** | | **~ 2 150 000 Kč** |
+| Položka | Tradiční odhad | **Odhad s AI Antigravity** | Odhadovaná cena s AI |
+| :--- | :--- | :--- | :--- |
+| **Vývoj Backend architektury** | 40 MD | **8 MD** | 120 000 Kč |
+| **AI integrace a ladění** | 25 MD | **5 MD** | 75 000 Kč |
+| **Front-end / Integrace na UI** | 30 MD | **10 MD** | 150 000 Kč |
+| **Integrace na Entra ID (OIDC)** | 10 MD | **3 MD** | 45 000 Kč |
+| **Bezpečnostní Audit (NÚKIB)** | 25 MD | **25 MD** (nelze urychlit) | 350 000 Kč |
+| **Instalace a Deployment** | 10 MD | **4 MD** | 60 000 Kč |
+| **Celkem Implementace** | **140 MD** | **55 MD** | **~ 800 000 Kč** |
 
 ---
 
@@ -59,10 +60,10 @@ Dlouhodobý provoz vyžaduje údržbu kódu, aktualizace bezpečnostních zápla
 
 ---
 
-## 6. Závěrečná kalkulace
-Řešení na míru bez závislosti na cloudových dodavatelích znamená vyšší počáteční investici do výpočetního výkonu (GPU), ale z dlouhodobého hlediska nabízí stabilnější provozní náklady a maximální kontrolu nad informační bezpečností státu.
+## 6. Závěrečná kalkulace (S využitím AI Antigravity)
+Řešení na míru bez závislosti na cloudových dodavatelích znamená vyšší počáteční investici do výpočetního výkonu (GPU), ale z dlouhodobého hlediska nabízí stabilnější provozní náklady a maximální kontrolu nad informační bezpečností státu. Využití AI pro vývoj sráží implementační náklady na minimum.
 
-* **Počáteční investice (CAPEX - HW + Služby):** 4 500 000 - 5 500 000 Kč bez DPH
+* **Počáteční investice (CAPEX - HW + Služby):** ~ 3 150 000 - 4 150 000 Kč bez DPH (úspora 1,35 mil. Kč díky AI)
 * **Předpokládané roční provozní náklady (OPEX):** cca 800 000 Kč bez DPH
 
 *(Uvedené částky jsou hrubým expertním odhadem pro rozpočtové plánování a mohou se měnit v závislosti na konkrétní ceně GPU akcelerátorů na trhu a výsledné smluvní hodinové sazbě za vývojové práce).*

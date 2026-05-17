@@ -592,49 +592,30 @@ semantic-index/
 
 ---
 
-## 9. Odhadovaný harmonogram
-
 ```mermaid
 gantt
-    title Harmonogram realizace
+    title Akcelerovaný harmonogram realizace (Powered by Antigravity AI)
     dateFormat YYYY-MM-DD
     axisFormat %d.%m.
 
-    section Fáze 1 - Základ
-    Inicializace projektu       :f1_1, 2026-05-19, 2d
-    Docker Compose              :f1_2, after f1_1, 2d
-    DB schéma + migrace         :f1_3, after f1_2, 3d
-    REST API skeleton           :f1_4, after f1_3, 2d
-    Autentizace                 :f1_5, after f1_4, 3d
+    section Fáze 1 - Základ (Hotovo)
+    Inicializace a DB           :done, f1_1, 2026-05-16, 1d
+    API skeleton & Auth         :done, f1_2, after f1_1, 1d
 
-    section Fáze 2 - Dokumenty
-    Upload dokumentů            :f2_1, after f1_5, 3d
-    Verzování                   :f2_2, after f2_1, 2d
-    Tag management              :f2_3, after f2_2, 3d
-    Document CRUD               :f2_4, after f2_3, 2d
+    section Fáze 2 & 3 - Dokumenty a Pipeline (Aktivní)
+    Upload a Parser (AI)        :active, f2_1, after f1_2, 2d
+    Chunking a Embedding (AI)   :active, f2_2, after f2_1, 2d
+    Celery Pipeline             :f2_3, after f2_2, 1d
 
-    section Fáze 3 - Pipeline
-    PDF parser                  :f3_1, after f2_4, 3d
-    Chunking engine             :f3_2, after f3_1, 4d
-    Embedding service           :f3_3, after f3_2, 4d
-    Async pipeline              :f3_4, after f3_3, 3d
-    Retry mechanismus           :f3_5, after f3_4, 1d
-
-    section Fáze 4 - Vyhledávání
-    Index management            :f4_1, after f3_5, 3d
-    Vektorové vyhledávání       :f4_2, after f4_1, 3d
-    Výkonnostní optimalizace    :f4_3, after f4_2, 3d
-    Batch zpracování            :f4_4, after f4_3, 1d
-
-    section Fáze 5 - Observabilita
-    Prometheus metriky          :f5_1, after f4_4, 2d
-    Audit log                   :f5_2, after f5_1, 2d
-    TLS + multi-tenant          :f5_3, after f5_2, 1d
+    section Fáze 4 & 5 - Vyhledávání a Observabilita
+    Vektorové vyhledávání       :f4_1, after f2_3, 2d
+    Monitoring a Audit          :f4_2, after f4_1, 2d
 
     section Fáze 6 - Finalizace
-    Integrační testy            :f6_1, after f5_3, 3d
-    Dokumentace                 :f6_2, after f6_1, 2d
-    Deployment balíček          :f6_3, after f6_2, 2d
+    Integrační testy            :f6_1, after f4_2, 2d
+    Dokumentace a Deployment    :f6_2, after f6_1, 2d
 ```
 
-**Celkový odhad: ~11 týdnů** (při jednom vývojáři na plný úvazek)
+> [!IMPORTANT]
+> **Dopad využití agentního AI systému Antigravity (Google DeepMind):**  
+> Tradiční vývojový cyklus softwarového inženýrství počítal se 70+ Man-Days (přibližně 11 týdnů) vývojářských prací pro implementaci této specifikace. **Zapojením nástroje Antigravity se doba zkracuje na zhruba 2,5 - 3 týdny** a náklady na vývoj se snižují o ~70-80 %. Umělá inteligence plně převzala psaní boilerplate kódu, scaffolding (FastAPI, Alembic migrace, Docker) a logiku služeb, čímž umožnila architektovi soustředit se výhradně na business logiku a data security AČR.

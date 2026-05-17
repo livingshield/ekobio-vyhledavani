@@ -1,15 +1,17 @@
 # Plán realizace: Sémantický index dokumentů
 
-Tento dokument obsahuje krok za krokem rozepsaný plán implementace projektu. Slouží k přehlednému sledování postupu.
+Tento dokument obsahuje krok za krokem rozepsaný plán implementace projektu.
+> [!NOTE]
+> **Harmonogram počítá s využitím pokročilého AI asistenta (Antigravity od Google DeepMind) pro generování kódu.** Původní doba realizace (cca 11 týdnů) se tímto přístupem zkracuje na historické minimum zhruba **3-4 týdnů**. Vývojář zde funguje jako "AI pilot" a architekt.
 
-## Fáze 1: Inicializace a Infrastruktura (✅ Dokončeno)
+## Fáze 1: Inicializace a Infrastruktura (✅ Dokončeno pomocí AI během jednotek hodin)
 - [x] Vytvoření složky projektu a repozitáře
 - [x] Nastavení `pyproject.toml` a instalace závislostí (FastAPI, SQLAlchemy, pgvector, Celery, Redis)
 - [x] Konfigurace `docker-compose.yml` (Postgres + pgvector, Redis)
 - [x] Příprava `.env` šablony a úvodního `.gitignore`
 - [x] Vytvoření vstupního bodu API (`src/main.py`)
 
-## Fáze 2: Datový model a Databáze (🚧 Na řadě)
+## Fáze 2: Datový model a Databáze (🚧 Probíhá - zrychleno AI)
 - [ ] Konfigurace připojení k databázi přes SQLAlchemy
 - [ ] Inicializace nástroje Alembic pro databázové migrace (`alembic init`)
 - [ ] Definice SQLAlchemy modelů (`Document`, `DocumentChunk`)
