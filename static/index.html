@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sémantický Index Dokumentů</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <!-- Toast Container -->
+    <div id="toast-container"></div>
+
+    <!-- Animated Background Particles -->
+    <div class="bg-particles">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+
+    <!-- Hero Header -->
+    <header class="hero">
+        <div class="hero-content">
+            <div class="hero-icon">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="url(#grad)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <defs>
+                        <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#818cf8"/>
+                            <stop offset="100%" style="stop-color:#c084fc"/>
+                        </linearGradient>
+                    </defs>
+                    <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/>
+                    <circle cx="12" cy="10" r="3"/>
+                    <path d="M12 13v2"/>
+                </svg>
+            </div>
+            <h1 class="hero-title">Sémantický Index Dokumentů</h1>
+            <p class="hero-subtitle">AI-Powered Document Search</p>
+            <div class="hero-stats" id="hero-stats">
+                <div class="stat-pill">
+                    <span class="stat-number" id="stat-docs">0</span>
+                    <span class="stat-label">Documents</span>
+                </div>
+                <div class="stat-pill">
+                    <span class="stat-number" id="stat-chunks">0</span>
+                    <span class="stat-label">Chunks</span>
+                </div>
+                <div class="stat-pill">
+                    <span class="stat-number" id="stat-model">e5-small</span>
+                    <span class="stat-label">Model</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-grid">
+        <!-- Upload Section -->
+        <section class="glass-card upload-section">
+            <div class="card-header">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                    <polyline points="17 8 12 3 7 8"/>
+                    <line x1="12" y1="3" x2="12" y2="15"/>
+                </svg>
+                <h2>Upload Document</h2>
+            </div>
+
+            <div class="drop-zone" id="drop-zone">
+                <div class="drop-zone-content">
+                    <div class="drop-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                            <line x1="12" y1="18" x2="12" y2="12"/>
+                            <line x1="9" y1="15" x2="12" y2="12"/>
+                            <line x1="15" y1="15" x2="12" y2="12"/>
+                        </svg>
+                    </div>
+                    <p class="drop-text">Drag & drop your PDF here</p>
+                    <p class="drop-subtext">or click to browse</p>
+                    <input type="file" id="file-input" accept=".pdf" hidden>
+                </div>
+                <!-- Upload Progress -->
+                <div class="upload-progress" id="upload-progress" style="display:none;">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill"></div>
+                    </div>
+                    <p class="progress-text" id="progress-text">Uploading…</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Search Section -->
+        <section class="glass-card search-section">
+            <div class="card-header">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"/>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                </svg>
+                <h2>Semantic Search</h2>
+            </div>
+
+            <div class="search-input-wrapper">
+                <input
+                    type="text"
+                    id="search-input"
+                    class="search-input"
+                    placeholder="Ask anything about your documents…"
+                    autocomplete="off"
+                >
+                <button class="search-btn" id="search-btn" title="Search">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"/>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                    </svg>
+                </button>
+                <div class="search-spinner" id="search-spinner" style="display:none;">
+                    <div class="spinner-sm"></div>
+                </div>
+            </div>
+
+            <div class="search-results" id="search-results">
+                <div class="empty-state">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" opacity="0.3">
+                        <circle cx="11" cy="11" r="8"/>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                    </svg>
+                    <p>Search results will appear here</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Documents List -->
+    <section class="glass-card documents-section">
+        <div class="card-header">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+                <line x1="16" y1="13" x2="8" y2="13"/>
+                <line x1="16" y1="17" x2="8" y2="17"/>
+                <polyline points="10 9 9 9 8 9"/>
+            </svg>
+            <h2>Documents</h2>
+            <button class="refresh-btn" id="refresh-btn" title="Refresh list">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="23 4 23 10 17 10"/>
+                    <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+                </svg>
+            </button>
+        </div>
+
+        <div class="documents-list" id="documents-list">
+            <div class="empty-state">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" opacity="0.3">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <polyline points="14 2 14 8 20 8"/>
+                </svg>
+                <p>No documents uploaded yet</p>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <p>Built with FastAPI · pgvector · sentence-transformers</p>
+    </footer>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>
