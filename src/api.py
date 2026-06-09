@@ -222,11 +222,11 @@ async def search_documents(request: SearchRequest, db: Session = Depends(get_db)
                 dc.chunk_index,
                 dc.text_content,
                 d.filename,
-                (dc.embedding <=> :query_vec::vector) AS distance
+                (dc.embedding <=> CAST(:query_vec AS vector)) AS distance
             FROM document_chunks dc
             JOIN documents d ON d.id = dc.document_id
             WHERE d.status = 'ready'
-            ORDER BY dc.embedding <=> :query_vec::vector
+            ORDER BY dc.embedding <=> CAST(:query_vec AS vector)
             LIMIT :lim
             """
         ),
