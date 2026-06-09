@@ -83,6 +83,7 @@ async function handleFile(file) {
     try {
         const res = await fetch(`${API_BASE}/documents`, {
             method: 'POST',
+            headers: { 'Bypass-Tunnel-Reminder': 'true' },
             body: formData,
         });
 
@@ -121,7 +122,9 @@ async function pollDocumentStatus(docId) {
     const poll = async () => {
         attempts++;
         try {
-            const res = await fetch(`${API_BASE}/documents/${docId}`);
+            const res = await fetch(`${API_BASE}/documents/${docId}`, {
+                headers: { 'Bypass-Tunnel-Reminder': 'true' }
+            });
             const doc = await res.json();
 
             if (doc.status === 'ready') {
@@ -183,7 +186,10 @@ async function performSearch(query) {
     try {
         const res = await fetch(`${API_BASE}/search`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 
+                'Content-Type': 'application/json',
+                'Bypass-Tunnel-Reminder': 'true'
+            },
             body: JSON.stringify({ query, limit: 8 }),
         });
 
@@ -246,7 +252,9 @@ refreshBtn.addEventListener('click', loadDocuments);
 
 async function loadDocuments() {
     try {
-        const res = await fetch(`${API_BASE}/documents`);
+        const res = await fetch(`${API_BASE}/documents`, {
+            headers: { 'Bypass-Tunnel-Reminder': 'true' }
+        });
         if (!res.ok) throw new Error('Failed to load documents');
         const docs = await res.json();
         renderDocuments(docs);
@@ -315,7 +323,10 @@ async function deleteDocument(docId, filename) {
     if (!confirm(`Delete "${filename}"? This cannot be undone.`)) return;
 
     try {
-        const res = await fetch(`${API_BASE}/documents/${docId}`, { method: 'DELETE' });
+        const res = await fetch(`${API_BASE}/documents/${docId}`, { 
+            method: 'DELETE',
+            headers: { 'Bypass-Tunnel-Reminder': 'true' }
+        });
         if (!res.ok) {
             const err = await res.json().catch(() => ({}));
             throw new Error(err.detail || 'Delete failed');
