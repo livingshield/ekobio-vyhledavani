@@ -2,7 +2,7 @@
    Sémantický Index Dokumentů – Frontend Application
    ═══════════════════════════════════════════════════════════════════════════ */
 
-const API_BASE = 'https://common-mugs-strive.loca.lt/api/v1';
+const API_BASE = 'https://proud-tigers-worry.loca.lt/api/v1';
 
 // ── DOM Elements ─────────────────────────────────────────────────────────────
 const $ = (sel) => document.querySelector(sel);
