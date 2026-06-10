@@ -2,23 +2,15 @@ services:
   - type: web
     name: semantic-index
     runtime: python
-    plan: starter
+    plan: free
     buildCommand: pip install -r requirements.txt
     startCommand: uvicorn src.main:app --host 0.0.0.0 --port $PORT
     envVars:
       - key: DATABASE_URL
-        fromDatabase:
-          name: semantic-index-db
-          property: connectionString
+        sync: false
       - key: EMBEDDING_MODEL
         value: intfloat/multilingual-e5-small
       - key: VECTOR_DIMENSIONS
         value: "384"
       - key: PYTHON_VERSION
         value: "3.12.3"
-
-databases:
-  - name: semantic-index-db
-    plan: starter
-    postgresMajorVersion: 16
-    ipAllowList: []
