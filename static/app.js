@@ -2,7 +2,7 @@
    Sémantický Index Dokumentů – Frontend Application
    ═══════════════════════════════════════════════════════════════════════════ */
 
-const API_BASE = 'https://proud-tigers-worry.loca.lt/api/v1';
+let API_BASE = 'https://proud-tigers-worry.loca.lt/api/v1'; // Default fallback
 
 // ── DOM Elements ─────────────────────────────────────────────────────────────
 const $ = (sel) => document.querySelector(sel);
@@ -239,7 +239,7 @@ function renderSearchResults(results) {
                         </span>
                         <span class="result-score ${scoreClass}">${scorePercent}% match</span>
                     </div>
-                    <p class="result-text">${escapeHtml(truncated)}</p>
+                    <p class="result-text">${highlightText(truncated, searchInput.value.trim())}</p>
                     <p class="result-meta">Chunk #${r.chunk_index + 1}</p>
                 </div>`;
         })
@@ -346,7 +346,35 @@ function escapeHtml(str) {
     return div.innerHTML;
 }
 
+function highlightText(text, query) {
+    if (!query) return escapeHtml(text);
+    const escapedText = escapeHtml(text);
+    const words = query.toLowerCase().split(/\s+/).filter(w => w.length > 1);
+    if (words.length === 0) return escapedText;
+    
+    const escapedWords = words.map(w => w.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&'));
+    const regex = new RegExp(`(${escapedWords.join('|')})`, 'gi');
+    return escapedText.replace(regex, '<mark class="highlight">$1</mark>');
+}
+
 // ── Init ─────────────────────────────────────────────────────────────────────
-document.addEventListener('DOMContentLoaded', () => {
+async function initConfig() {
+    try {
+        // Fetch config.json to resolve dynamic API_BASE from localtunnel auto-sync
+        const res = await fetch('config.json');
+        if (res.ok) {
+            const config = await res.json();
+            if (config.api_base) {
+                API_BASE = config.api_base;
+                console.log("API_BASE set from config.json:", API_BASE);
+            }
+        }
+    } catch (e) {
+        console.warn("Could not load config.json:", e);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+    await initConfig();
     loadDocuments();
 });

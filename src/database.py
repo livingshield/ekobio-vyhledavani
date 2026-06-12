@@ -32,3 +32,13 @@ def init_db():
     from src import models  # noqa: F401
 
     Base.metadata.create_all(bind=engine)
+
+    # Create HNSW index for fast vector similarity search if it doesn't exist
+    with engine.connect() as conn:
+        conn.execute(
+            text(
+                "CREATE INDEX IF NOT EXISTS document_chunks_embedding_idx "
+                "ON document_chunks USING hnsw (embedding vector_cosine_ops)"
+            )
+        )
+        conn.commit()
